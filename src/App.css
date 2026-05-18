@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html, body, #root {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: rgb(192, 192, 192);
+}
+
+#root {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+h2 {
+    margin-right: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+}
+
+.todo-list {
+    margin-top: 10px;
+}
+
+.add {
+    padding: 12px 15px;
+    background-color: rgb(68, 236, 255);
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin-left: 10px;
+}
+
+.update {
+    padding: 12px 15px;
+    background-color: rgb(51, 255, 126);
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin-left: 10px;
+}
+
+.cancel {
+    padding: 12px 15px;
+    background-color: rgb(255, 245, 108);
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin-left: 10px;
+}
+
+li {
+    margin-top: 10px;
+    list-style: none;
+    padding: 10px;
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+}
+
+.edit {
+    padding: 12px 15px;
+    background-color: rgb(249, 145, 71);
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin-left: 10px;
+}
+
+.delete {
+    padding: 12px 15px;
+    background-color: rgb(241, 59, 50);
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    margin-left: 10px;
+}
+
+@media (max-width: 600px) {
+    form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    input {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .add, .update, .cancel {
+        width: 100%;
+        margin-top: 10px;
+        display: block;
+        margin: 5px auto;
+    }
+
+    li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    li div {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
