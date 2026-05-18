@@ -80,7 +80,6 @@ const App = () => {
 
       {isEditing ? (
         <form onSubmit={handleEditFormSubmit}> 
-          <h2>Edit todo </h2>
           <input 
             type="text"
             name='editTodo' 
