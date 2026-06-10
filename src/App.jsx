@@ -1,50 +1,44 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { supabase } from './supabase'
 
 const App = () => {
-  const [todos, setTodos] = useState(() => {
-    const savedTodos = localStorage.getItem("todos");
-
-    if(savedTodos) {
-      return JSON.parse(savedTodos)
-    }else {
-      return [];
-    }
-  })
+  const [todos, setTodos] = useState([])
   const [todo, setTodo] = useState("")
   const [isEditing, setIsEditing] = useState(false)
   const [currentTodo, setCurrentTodo] = useState({})
 
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos])
+    const fetchTodos = async () => {
+      const {data} = await supabase.from('todos').select('*').order('created_at')
+      setTodos(data || [])
+    }
+    fetchTodos()
+  }, [])
 
   function handleInputChange(e) {
     setTodo(e.target.value);
   }
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
 
     e.preventDefault();
 
     if(todo.trim() !== ""){
-      setTodos([
-        ...todos,
-        {
-          id: Date.now(),
-          text: todo.trim()
-        }
-      ])
+      const {data, error} = await supabase.from('todos').insert([{ text: todo.trim() }]).select()
+      console.log("data", data)
+      console.log("error", error)
+      if (data) {
+        setTodos([...todos, data[0]])
+      }
+      
     }
     setTodo("");
   }
 
-  function handleDeleteClick(id) {
-    const removeItem = todos.filter((todo) => {
-      return todo.id !== id
-    })
-
-    setTodos(removeItem);
+  async function handleDeleteClick(id) {
+    await supabase.from('todos').delete().eq('id', id)
+    setTodos(todos.filter((todo) => todo.id !== id))
   }
 
   function handleEditClick(todo) {
@@ -57,13 +51,11 @@ const App = () => {
     console.log("Current Todo ", currentTodo);
   }
 
-  function handleUpdateTodo(id, updatedTodo) {
-    const updatedItem = todos.map((todo) => {
-      return todo.id === id ? updatedTodo : todo;
-    })
+  async function handleUpdateTodo(id, updatedTodo) {
+    await supabase.from('todos').update({ text: updatedTodo.text}).eq('id', id)
+    setTodos(todos.map((todo) => todo.id === id ? updatedTodo : todo))
 
     setIsEditing(false);
-    setTodos(updatedItem);
   }
 
   function handleEditFormSubmit(e) {
@@ -76,7 +68,7 @@ const App = () => {
 
   return (
     <div className='container'>
-      <h1>Todo App</h1>
+      <h1>Todo List</h1>
 
       {isEditing ? (
         <form onSubmit={handleEditFormSubmit}> 
