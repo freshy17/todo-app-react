@@ -39,6 +39,10 @@ h2 {
     margin-right: 10px;
 }
 
+h1 {
+    color: black;
+}
+
 input {
     flex: 1;
     padding: 8px;
