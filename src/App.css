@@ -45,6 +45,7 @@ input {
     border-radius: 10px;
     border: none;
     background-color: rgb(230, 227, 227);
+    color: black;
 }
 
 .todo-list {
