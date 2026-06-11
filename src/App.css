@@ -102,6 +102,64 @@ li {
     margin-left: 10px;
 }
 
+.login-logout {
+    color: red;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    text-decoration: underline;
+}
+
+.logout {
+    cursor: pointer;
+    padding: 12px 15px;
+    background-color: transparent;
+    border: none;
+    margin-left: 10px;
+    color: red;
+    font-size: 15px;
+    text-decoration: underline;
+    border-radius: 5px;
+    margin-top: 10px;
+} 
+
+.darkMode {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: rgb(141, 132, 132);
+    border: none;
+    margin-left: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    margin: 10px 0pc;
+}
+
+.dark {
+    background-color: rgb(30, 30, 30);
+    color: white;
+}
+
+.dark li {
+    background-color: rgb(50, 50, 50);
+    color: white;
+}
+
+.dark input {
+    background-color: rgb(70, 70, 70);
+    color: white;
+}
+
+.dark-body {
+    background-color: rgb(30, 30, 30);
+}
+
+.dark h1,
+.dark p,
+.dark h2 {
+    color: white;
+}
+
 @media (max-width: 600px) {
     form {
         flex-direction: column;
@@ -123,7 +181,7 @@ li {
     li {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 10px; margin-bottom: 15px;
     }
 
     li div {
@@ -132,3 +190,4 @@ li {
         justify-content: flex-end;
     }
 }
+

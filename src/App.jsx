@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { supabase } from './supabase'
+import Auth from './Auth'
 
 const App = () => {
   const [todos, setTodos] = useState([])
@@ -8,13 +9,43 @@ const App = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [currentTodo, setCurrentTodo] = useState({})
 
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [darkMode, setDarkMode] = useState(false)
+
   useEffect(() => {
+
+    if(!session) return 
+
     const fetchTodos = async () => {
-      const {data} = await supabase.from('todos').select('*').order('created_at')
+      setLoading(true)
+      const {data, error} = await supabase.from('todos').select('*').order('created_at')
+      console.log("fetch data: ", data)
+      console.log("fetch error: ", error)
       setTodos(data || [])
+      setLoading(false)
     }
     fetchTodos()
+  }, [session])
+
+  useEffect(() => {
+    //เช็ค session ตอนเปิดหน้าเว็บ
+    supabase.auth.getSession().then(({data: {session}}) => {
+      setSession(session)
+    })
+    //คอยฟังว่า login/logout เมื่อไหร่
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
   }, [])
+
+  useEffect(() => {
+    if(darkMode) {
+      document.body.classList.add('dark-body')
+    } else {
+      document.body.classList.remove('dark-body')
+    }
+  }, [darkMode])
 
   function handleInputChange(e) {
     setTodo(e.target.value);
@@ -25,13 +56,18 @@ const App = () => {
     e.preventDefault();
 
     if(todo.trim() !== ""){
-      const {data, error} = await supabase.from('todos').insert([{ text: todo.trim() }]).select()
+      const {data, error} = await supabase
+        .from('todos')
+        .insert([{ 
+          text: todo.trim(), 
+          user_id: session.user.id 
+        }])
+        .select()
       console.log("data", data)
       console.log("error", error)
       if (data) {
         setTodos([...todos, data[0]])
-      }
-      
+      } 
     }
     setTodo("");
   }
@@ -64,11 +100,21 @@ const App = () => {
     handleUpdateTodo(currentTodo.id, currentTodo);
   }
 
-  console.log(todos);
+  // console.log(todos);
+
+  if(!session) return (
+    <Auth darkMode={darkMode}/>
+  )
 
   return (
-    <div className='container'>
+    <div className={`container ${darkMode ? 'dark' : ''}`}>
       <h1>Todo List</h1>
+
+      <p>เข้าสู่ระบบด้วย: {session.user.email}</p>
+
+      <button className='darkMode' onClick={() => setDarkMode(!darkMode)}>
+        {darkMode ? "☀️Light Mode" : "🌙Dark Mode"}
+      </button>
 
       {isEditing ? (
         <form onSubmit={handleEditFormSubmit}> 
@@ -97,7 +143,10 @@ const App = () => {
       </form>
       }
 
-      <ul className='todo-list'>
+      {loading ? (
+        <p>กำลังโหลด...</p>
+      ) : (
+         <ul className='todo-list'>
         {todos.map((todo) => (
           <li key={todo.id}>
             {todo.text}
@@ -107,7 +156,11 @@ const App = () => {
           </li>
         ))}
       </ul>
-
+      )}
+     
+    <button className='logout' onClick={() => supabase.auth.signOut()}>
+        Logout
+      </button>
     </div>
   )
 }
