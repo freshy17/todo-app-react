@@ -11,7 +11,11 @@ const App = () => {
 
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [darkMode, setDarkMode] = useState(false)
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("darkMode")
+    return saved === "true"
+  })
 
   useEffect(() => {
 
@@ -40,6 +44,8 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    localStorage.setItem("darkMode", darkMode)
+
     if(darkMode) {
       document.body.classList.add('dark-body')
     } else {
